@@ -1,0 +1,8 @@
+.wrapper {
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.list-folder-item {
+  font-size: 0.8rem !important;
+}
