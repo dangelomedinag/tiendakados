@@ -144,16 +144,17 @@ module.exports = () =>{
     },
     'post': {
       '/folder/update': (req, res, next) => {
-        const {path,newhandle, currenthandle} = req.body
+        const {path, currenthandle, newhandle} = req.body
+
         h.updateFolder(path,currenthandle,newhandle)
        
         res.redirect('/')
        
       },
       '/file/update': (req, res, next) => {
-        const {newhandle, currenthandle} = req.body
-        console.log(newhandle,currenthandle)
-        h.updateFilename(currenthandle,newhandle)
+        const {path,currentfilename, newfilename } = req.body
+        console.log(path,currentfilename,newfilename)
+        h.updateFilename(path, currentfilename,newfilename)
        
         res.redirect('/')
        

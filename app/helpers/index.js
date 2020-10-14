@@ -90,10 +90,10 @@ const readFolder = (...rest) =>{
 /* Update name folder */
 
 
-const updateFolder = (fullpath, handel, newhandel) => {
+const updateFolder = (fullpath, currenthandel, newhandel) => {
 
 	try {
-		fs.renameSync(path.resolve(fullpath, handel), path.resolve(fullpath, newhandel))
+		fs.renameSync(path.resolve(fullpath, currenthandel), path.resolve(fullpath, newhandel))
 	} catch (error) {
 		console.log(error)
 	}
@@ -108,29 +108,12 @@ const updateFolder = (fullpath, handel, newhandel) => {
 /* Update name filename */
 
 
-const updateFilename = (handel, newhandel) => {
-	let dirs = [config.menDir.collection, config.womanDir.collection, config.poleronDir.collection]
-
-	dirs.forEach(dir => {
-		let collectionsArr = fs.readdirSync(dir);
-		collectionsArr.forEach(collection => {
-			let foldersArr = fs.readdirSync(path.resolve(dir, collection));
-			foldersArr.forEach(product => {
-				let variantsArr = fs.readdirSync(path.resolve(dir, collection, product));
-				variantsArr.forEach(variant => {	
-					if (variant === handel) {
-						try {
-							fs.renameSync(path.resolve(dir, collection, product, variant), path.resolve(dir, collection, product, newhandel))
-						} catch (error) {
-							console.log(error)
-						}
-		
-						return true
-					}
-				})
-			})
-		})
-	})
+const updateFilename = (fullpath, currentfilename, newfilename) => {
+	try {
+		fs.renameSync(path.resolve(fullpath, currentfilename), path.resolve(fullpath, newfilename))
+	} catch (error) {
+		console.log(error)
+	}
 }
 
 

@@ -86,8 +86,9 @@ html(lang="en")
                       .input-group.input-group-sm
                         .input-group-prepend
                           button.btn.btn-outline-secondary( type="submit" id="button-addon1") Update
-                        input.form-control(type='text' aria-label='newhandle' name="newhandle" value=subval.filename)
-                        input.form-control(type='text' aria-label='currenthandle' name="currenthandle" value=subval.filename readonly)
+                        input.form-control(type='text' aria-label='newhandle' name="newfilename" value=subval.filename)
+                        input.form-control(type='text' aria-label='currenthandle' name="currentfilename" value=subval.filename readonly)
+                        input.form-control(type='text' aria-label='currenthandle' name="path" value=`${val.folder}\\${val.collection}\\${val.handle}` readonly)
                     each err in subval.errors
                       .alert.alert-danger.py-1.m-0(role="alert")
                         p.p-0.m-0
