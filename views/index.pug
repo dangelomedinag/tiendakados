@@ -78,6 +78,7 @@ html(lang="en")
                     .form-group
                       label(for='currenthandle') Handle actual
                       input#currenthandle.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
+                      input#currenthandle.form-control.form-control-sm(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
                     button.btn.btn-primary.btn-sm(type='submit') Cambiar
                   hr
                   each subval in val.variants

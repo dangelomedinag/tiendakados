@@ -144,8 +144,8 @@ module.exports = () =>{
     },
     'post': {
       '/folder/update': (req, res, next) => {
-        const {newhandle, currenthandle} = req.body
-        h.updateFolder(currenthandle,newhandle)
+        const {path,newhandle, currenthandle} = req.body
+        h.updateFolder(path,currenthandle,newhandle)
        
         res.redirect('/')
        

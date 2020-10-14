@@ -90,26 +90,13 @@ const readFolder = (...rest) =>{
 /* Update name folder */
 
 
-const updateFolder = (handel, newhandel) => {
-	let dirs = [config.menDir.collection, config.womanDir.collection, config.poleronDir.collection]
-	dirs.forEach(dir =>{
+const updateFolder = (fullpath, handel, newhandel) => {
 
-		let collectionsArr = fs.readdirSync(dir);
-		collectionsArr.forEach(collection => {
-			let foldersArr = fs.readdirSync(path.resolve(dir, collection));
-			foldersArr.forEach(folder => {
-				if (folder === handel) {
-					try {
-						fs.renameSync(path.resolve(dir, collection, folder), path.resolve(dir, collection, newhandel))
-					} catch (error) {
-						console.log(error)
-					}
-	
-					return true
-				}
-			})
-		})
-	})
+	try {
+		fs.renameSync(path.resolve(fullpath, handel), path.resolve(fullpath, newhandel))
+	} catch (error) {
+		console.log(error)
+	}
 
 }
 
