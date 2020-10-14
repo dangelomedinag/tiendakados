@@ -12,7 +12,7 @@ html(lang="en")
       .modal-dialog
         .modal-content
           .modal-header
-            h5#exampleModalLabel.modal-title Modal title
+            h5#exampleModalLabel.modal-title Anuncio
             button.close(type='button' data-dismiss='modal' aria-label='Close')
               span(aria-hidden='true') &times;
           .modal-body
@@ -49,7 +49,7 @@ html(lang="en")
               span.ml-2=`(${equals.length})`
             #list-tab.list-group(role='tablist')
               each val, index in products
-                a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')= val.handle
+                a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
                   if val.caution
                     span.badge.badge-danger.ml-3 file
                   if val.warning
@@ -77,8 +77,8 @@ html(lang="en")
                           small=err.log
                     .form-group
                       label(for='currenthandle') Handle actual
-                      input#currenthandle.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
-                      input#currenthandle.form-control.form-control-sm(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
+                      input.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
+                      input.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
                     button.btn.btn-primary.btn-sm(type='submit') Cambiar
                   hr
                   each subval in val.variants
