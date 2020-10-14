@@ -4,19 +4,19 @@
 
 ### una pequeña aplicacion creada para facilitar el manejo de productos de una tienda shopify
 
-## Get started
+## Inicio rápido
 
-Install the dependencies...
+Instalas las dependencias...
 
 ```bash
 cd tiendakados
 npm install
 ```
 
-...then start:
+...entonces empieza con:
 
 ```bash
 npm run dev
 ```
 
-Navigate to [localhost:3000](http://localhost:3000). You should see your app running. Edit app.js file in `src`, save it, and reload the page to see your changes.
+Navega a [localhost:3000](http://localhost:3000).Tu vas poder ver tus app corriendo. Edita app.js o cualquier otro archivo en el directorio raíz `root`, guardalo, y refresca la página para visualizar los cambios.
