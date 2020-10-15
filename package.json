@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npm run dev --prefix client",
     "server": "nodemon app.js --ignore 'app-client/' --ignore 'node_modules/'",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "open":"node runbrowser.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run open\""
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "opn": "^6.0.0",
     "pug": "^3.0.0",
     "uuid": "^8.3.1"
   },

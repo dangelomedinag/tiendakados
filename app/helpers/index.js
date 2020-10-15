@@ -43,7 +43,7 @@ const readFolder = (...rest) =>{
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
-					let title = '';
+					let title = false;
 					let caution = false;
 					let warning = false;
 					let listColors = [];
@@ -170,7 +170,8 @@ const getProducts = (rebuild, ...rest) => {
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
-					let title = '';
+					let title = false;
+					let titleDefault= product.toString().split("_")[0].charAt(0).toUpperCase() + product.toString().split("_")[0].slice(1) + " " + product.toString().split("_").slice(1).join(" ");
 					let listColors = [];
 					let variantsArr = fs.readdirSync(path.resolve(dir, collection, product));
 					let type  = '';
@@ -202,7 +203,7 @@ const getProducts = (rebuild, ...rest) => {
 					let productObj = {
 						collection,
 						handle: product,
-						title,
+						title: title ? title : titleDefault,
 						type,
 						variantPrice: detectPrice(type).precio,
 						costPerItem: detectPrice(type).costo,
@@ -267,13 +268,18 @@ const createTitleFromtxt = (...rest) => {
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
-					let descriptionText = product.replace(/(_|-|\.)/g," ").toString();
-					let toUpperCaseTitle = descriptionText.split(" ")[0].charAt(0).toUpperCase() +
-          descriptionText.toString().split(" ")[0].slice(1) + " " + descriptionText.toString().split(" ").slice(1).join(" ")
 					try {
-						fs.writeFileSync(path.resolve(dir, collection, product, "__title__.txt"), toUpperCaseTitle)
-					} catch (error) {
-						console.log(error)
+						fs.accessSync(path.resolve(dir, collection, product, "__title__.txt"), fs.constants.F_OK)
+					} catch (err) {
+						let descriptionText = product.replace(/(_|-|\.)/g," ").toString();
+						let toUpperCaseTitle = descriptionText.split(" ")[0].charAt(0).toUpperCase() +
+						descriptionText.toString().split(" ")[0].slice(1) + " " + descriptionText.toString().split(" ").slice(1).join(" ")
+						try {
+							fs.writeFileSync(path.resolve(dir, collection, product, "__title__.txt"), toUpperCaseTitle)
+							console.log('create file __title__.txt in: ', product);
+						} catch (error) {
+							console.log('error: ', error, product)
+						}
 					}
         })
       })

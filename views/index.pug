@@ -3,7 +3,7 @@ html(lang="en")
 	head
 		meta(charset="UTF-8")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
-		title Document
+		title kados app internal
 		link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
 		link(rel="stylesheet", href="./css/style.css")
 	body
@@ -26,7 +26,7 @@ html(lang="en")
 
 		nav.navbar.navbar-dark.bg-dark
 			.container
-				a.navbar-brand.mb-0.h1(href="#") Navbar
+				a.navbar-brand.mb-0.h1(href="#") kados
 				div
 					div.btn-group
 						a(href="/" class=`btn my-2 my-sm-0 ${type === 'all' ? 'btn-info' : 'btn-outline-info'}`) all
@@ -36,7 +36,7 @@ html(lang="en")
 					div.btn-group.ml-2
 						a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 my-sm-0`) rebulid
 						a(href="/fn/createtitletxt" class=`btn btn-outline-secondary my-2 my-sm-0`) txt title files
-				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
+				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 || products.filter(res => !res.title).length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
 					
 
 		// List group
@@ -55,6 +55,8 @@ html(lang="en")
 										span.badge.badge-danger.ml-3 file
 									if val.warning
 										span.badge.badge-warning.ml-3 folder
+									if !val.title
+										span.badge.badge-warning.ml-3 no title
 							
 				.col-7
 					.wrapper
@@ -70,6 +72,12 @@ html(lang="en")
 										.form-group
 											label(for='newtitle') Title
 											input#newtitle.form-control.form-control-sm(type='text' name="newtitle" aria-describedby='emailHelp' value=val.title)
+											if !val.title
+												.alert.alert-danger.py-1.m-0.mt-1(role="alert")
+													p.p-0.m-0
+														svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+															path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+														small no exite titulo para este producto
 										.form-group
 											label(for='newtitle') Title actual
 											input#newtitle.form-control.form-control-sm(type='text' name="currenttitle" aria-describedby='emailHelp' value=val.title readonly)
