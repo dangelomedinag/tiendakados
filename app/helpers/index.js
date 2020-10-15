@@ -146,7 +146,6 @@ const updateFilename = (fullpath, currentfilename, newfilename) => {
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
-
 const getProducts = (rebuild, ...rest) => {
 	let productArr = []
 
@@ -239,7 +238,12 @@ const getProducts = (rebuild, ...rest) => {
 
 
 
-/* fixed name filename with folder name */
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                  /* fixed name filename with folder name */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const fixedFilestoFolder = (...rest) => {
   rest.forEach(obj => {
@@ -273,7 +277,12 @@ const fixedFilestoFolder = (...rest) => {
 
 
 
-/* experimental text file for title */
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                    /*create text file copy for handle */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const createTitleFromtxt = (...rest) => {
 	rest.forEach(obj => {
@@ -309,6 +318,11 @@ const createTitleFromtxt = (...rest) => {
 
 
 /* update title txt file */
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                        /* update title txt file */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const updateTitlefile = (fullpath, currenttitle, newtitle) => {
 	try {
