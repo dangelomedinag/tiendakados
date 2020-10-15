@@ -267,9 +267,11 @@ const createTitleFromtxt = (...rest) => {
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
-					let descriptionText = product.replace(/(_|-|\.)/g," ").toString()
+					let descriptionText = product.replace(/(_|-|\.)/g," ").toString();
+					let toUpperCaseTitle = descriptionText.split(" ")[0].charAt(0).toUpperCase() +
+          descriptionText.toString().split(" ")[0].slice(1) + " " + descriptionText.toString().split(" ").slice(1).join(" ")
 					try {
-						fs.writeFileSync(path.resolve(dir, collection, product, "__title__.txt"), descriptionText)
+						fs.writeFileSync(path.resolve(dir, collection, product, "__title__.txt"), toUpperCaseTitle)
 					} catch (error) {
 						console.log(error)
 					}

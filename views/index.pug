@@ -33,8 +33,9 @@ html(lang="en")
 						a(href="/hombre" class=`btn my-2 my-sm-0 ${type === 'hombre' ? 'btn-info' : 'btn-outline-info'}`) hombre
 						a(href="/mujer" class=`btn my-2 my-sm-0 ${type === 'mujer' ? 'btn-info' : 'btn-outline-info'}`) mujer
 						a(href="/poleron" class=`btn my-2 my-sm-0 ${type === 'poleron' ? 'btn-info' : 'btn-outline-info'}`) poleron
-					div.btn-group
-						a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 ml-2 my-sm-0`) rebulid
+					div.btn-group.ml-2
+						a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 my-sm-0`) rebulid
+						a(href="/fn/createtitletxt" class=`btn btn-outline-secondary my-2 my-sm-0`) txt title files
 				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
 					
 
