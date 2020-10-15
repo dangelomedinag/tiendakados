@@ -1,11 +1,6 @@
 const h = require('../helpers');
 const config = require('../config/index')
 
-const antes = (req, res, next) =>{
-  h.fixedFilestoFolder(config.menDir, config.womanDir, config.poleronDir)
-  setTimeout(()=>{ next() },6000)
-}
-
 
 module.exports = () =>{
   let routes = {
@@ -22,8 +17,7 @@ module.exports = () =>{
                 : [...newTempArr, el],
             []
           );
-        // console.log(ccc.sort());
-        // console.log(arrRep.sort());
+
         res.status(200).render('index', {
           products,
           type: 'all',
@@ -40,7 +34,7 @@ module.exports = () =>{
         if(type === 'hombre'){
           products = h.readFolder(config.menDir)
           let arrRep = [];
-          let ccc = products
+          products
             .map((res) => res.handle)
             .reduce(
               (newTempArr, el) =>
@@ -58,7 +52,7 @@ module.exports = () =>{
         }else if(type === 'mujer'){
           products = h.readFolder(config.womanDir)
           let arrRep = [];
-          let ccc = products
+          products
             .map((res) => res.handle)
             .reduce(
               (newTempArr, el) =>
@@ -76,7 +70,7 @@ module.exports = () =>{
         }else if(type === 'poleron'){
           products = h.readFolder(config.poleronDir)
           let arrRep = [];
-          let ccc = products
+          products
             .map((res) => res.handle)
             .reduce(
               (newTempArr, el) =>

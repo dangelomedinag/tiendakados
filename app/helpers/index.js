@@ -6,7 +6,14 @@ const fs = require('fs')
 const router = Router()
 const { v4: uuidv4 } = require("uuid");
 
-// Iterate through the routes object and mount the routes
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+            /* Iterate through the routes object and mount the routes */       
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
+
 let _registerRoutes = (routes, method) => {
 	for(let key in routes) {
 		if(typeof routes[key] === 'object' && routes[key] !== null && !(routes[key] instanceof Array)) {
@@ -29,7 +36,12 @@ let route = routes => {
 	return router;
 }
 
-/* end router functions */
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                  /* read folder index (problems end edit) */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const readFolder = (...rest) =>{
 	let productArr = []
@@ -94,11 +106,11 @@ const readFolder = (...rest) =>{
 	return productArr
 }
 
-
-/* end folder Iterartor */
-
-/* Update name folder */
-
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                          /* Update name folder */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const updateFolder = (fullpath, currenthandel, newhandel) => {
 
@@ -111,12 +123,12 @@ const updateFolder = (fullpath, currenthandel, newhandel) => {
 }
 
 
-/* end Update name folder */
 
-
-
-/* Update name filename */
-
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                          /* Update name filename */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
 
 const updateFilename = (fullpath, currentfilename, newfilename) => {
 	try {
@@ -127,9 +139,13 @@ const updateFilename = (fullpath, currentfilename, newfilename) => {
 }
 
 
-/* end Update name folder */
 
-/* update name filename */
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                          /* get product for API */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
+
 
 const getProducts = (rebuild, ...rest) => {
 	let productArr = []
@@ -218,10 +234,10 @@ const getProducts = (rebuild, ...rest) => {
       console.log('error', err)
     }
 	})
-	// console.log(productArr)
 	return productArr
 }
-/* end update name filename */
+
+
 
 /* fixed name filename with folder name */
 
@@ -255,7 +271,7 @@ const fixedFilestoFolder = (...rest) => {
 	})
 }
 
-/* end fixed name filename with folder name */
+
 
 /* experimental text file for title */
 
@@ -289,7 +305,6 @@ const createTitleFromtxt = (...rest) => {
 	})
 }
 
-/* end fixed name filename with folder name */
 
 
 
@@ -302,9 +317,6 @@ const updateTitlefile = (fullpath, currenttitle, newtitle) => {
 		console.log(error)
 	}
 }
-
-/* end update title txt file */
-
 
 
 
