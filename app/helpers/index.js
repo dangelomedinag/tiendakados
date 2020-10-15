@@ -43,6 +43,7 @@ const readFolder = (...rest) =>{
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
+					let title = '';
 					let caution = false;
 					let warning = false;
 					let listColors = [];
@@ -52,6 +53,14 @@ const readFolder = (...rest) =>{
 					}
           let variantsArr = fs.readdirSync(path.resolve(dir, collection, product));
           variantsArr.forEach(variant => {
+						if (variant === "__title__.txt") {
+							try {
+								title = fs.readFileSync(path.resolve(dir, collection, product, variant), {encoding:"utf-8"})
+							} catch (error) {
+								console.log(error)
+							}
+							return
+						}
 						let type = detectType(variant)
 						
 						let {color} = detectColor(variant,type)
@@ -67,6 +76,7 @@ const readFolder = (...rest) =>{
 						folder: dir,
 						collection,
 						handle: product,
+						title,
 						variants: listColors,
 						caution,
 						warning,
@@ -160,10 +170,19 @@ const getProducts = (rebuild, ...rest) => {
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
+					let title = '';
 					let listColors = [];
 					let variantsArr = fs.readdirSync(path.resolve(dir, collection, product));
 					let type  = '';
           variantsArr.forEach(variant => {
+						if (variant === "__title__.txt") {
+							try {
+								title = fs.readFileSync(path.resolve(dir, collection, product, variant), {encoding:"utf-8"})
+							} catch (error) {
+								console.log(error)
+							}
+							return
+						}
 						type = detectType(variant)
 						let {color, sort} = detectColor(variant, type);
 						// console.log(detectColor(variant,type))
@@ -183,11 +202,7 @@ const getProducts = (rebuild, ...rest) => {
 					let productObj = {
 						collection,
 						handle: product,
-						title:
-							product.toString().split("_")[0].charAt(0).toUpperCase() +
-							product.toString().split("_")[0].slice(1) +
-							" " +
-							product.toString().split("_").slice(1).join(" "),
+						title,
 						type,
 						variantPrice: detectPrice(type).precio,
 						costPerItem: detectPrice(type).costo,
@@ -241,11 +256,57 @@ const fixedFilestoFolder = (...rest) => {
 
 /* end fixed name filename with folder name */
 
+/* experimental text file for title */
+
+const createTitleFromtxt = (...rest) => {
+	rest.forEach(obj => {
+		let dir = obj.collection
+
+		try {
+      let collectionsArr = fs.readdirSync(dir);
+      collectionsArr.forEach(collection => {
+        let foldersArr = fs.readdirSync(path.resolve(dir, collection));
+        foldersArr.forEach(product => {
+					let descriptionText = product.replace(/(_|-|\.)/g," ").toString()
+					try {
+						fs.writeFileSync(path.resolve(dir, collection, product, "__title__.txt"), descriptionText)
+					} catch (error) {
+						console.log(error)
+					}
+        })
+      })
+    } catch (err) {
+      console.log('error', err)
+    }
+	})
+}
+
+/* end fixed name filename with folder name */
+
+
+
+/* update title txt file */
+
+const updateTitlefile = (fullpath, currenttitle, newtitle) => {
+	try {
+		fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), newtitle.toString())
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+/* end update title txt file */
+
+
+
+
 module.exports = {
 	route,
 	readFolder,
 	updateFolder,
 	updateFilename,
 	getProducts,
-	fixedFilestoFolder
+	fixedFilestoFolder,
+	createTitleFromtxt,
+	updateTitlefile
 }

@@ -101,6 +101,11 @@ module.exports = () =>{
         res.redirect('/');
         res.end()
       },
+      '/fn/createtitletxt': (req, res, next) => {
+        h.createTitleFromtxt(config.menDir, config.womanDir, config.poleronDir)
+        res.redirect('/');
+        res.end()
+      },
       '/api/all': (req, res, next) => {
         let products = h.getProducts(false, config.menDir, config.womanDir, config.poleronDir)
 
@@ -152,10 +157,18 @@ module.exports = () =>{
        
       },
       '/file/update': (req, res, next) => {
-        const {path,currentfilename, newfilename } = req.body
-        console.log(path,currentfilename,newfilename)
+				const {path,currentfilename, newfilename } = req.body
+				
         h.updateFilename(path, currentfilename,newfilename)
+				
+        res.redirect('/')
        
+      },
+      '/file/titleupdate': (req, res, next) => {
+				const {path,currenttitle, newtitle } = req.body
+				
+        h.updateTitlefile(path, currenttitle,newtitle)
+				
         res.redirect('/')
        
       }

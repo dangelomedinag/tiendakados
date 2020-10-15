@@ -457,4 +457,8 @@ const errLogsProducts = (product) => {
   return checkFiles.errors
 }
 
+const parseDescription = (product) =>{
+	return product.replace(/(_|-|\.)/g," ")
+}
+
 module.exports = {errLogs, detectColor, detectType, detectPrice, renameFileTofolder, errLogsProducts}

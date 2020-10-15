@@ -1,103 +1,113 @@
 <!DOCTYPE html>
 html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title Document
-    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
-    link(rel="stylesheet", href="./css/style.css")
-  body
-    // Modal
-    #exampleModal.modal.fade.show(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
-      .modal-dialog
-        .modal-content
-          .modal-header
-            h5#exampleModalLabel.modal-title Anuncio
-            button.close(type='button' data-dismiss='modal' aria-label='Close')
-              span(aria-hidden='true') &times;
-          .modal-body
-            if equals.length > 0
-              each val, index in equals
-                p=val
-            else
-              p.lead NO EXISTEN PRODUCTOS CON HANDLER REPETIDOS
-          .modal-footer
-            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+	head
+		meta(charset="UTF-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title Document
+		link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
+		link(rel="stylesheet", href="./css/style.css")
+	body
+		// Modal
+		#exampleModal.modal.fade.show(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h5#exampleModalLabel.modal-title Anuncio
+						button.close(type='button' data-dismiss='modal' aria-label='Close')
+							span(aria-hidden='true') &times;
+					.modal-body
+						if equals.length > 0
+							each val, index in equals
+								p=val
+						else
+							p.lead NO EXISTEN PRODUCTOS CON HANDLE REPETIDOS
+					.modal-footer
+						button.btn.btn-secondary(type='button' data-dismiss='modal') Close
 
-    nav.navbar.navbar-dark.bg-dark
-      .container
-        a.navbar-brand.mb-0.h1(href="#") Navbar
-        div
-          div.btn-group
-            a(href="/" class=`btn my-2 my-sm-0 ${type === 'all' ? 'btn-info' : 'btn-outline-info'}`) all
-            a(href="/hombre" class=`btn my-2 my-sm-0 ${type === 'hombre' ? 'btn-info' : 'btn-outline-info'}`) hombre
-            a(href="/mujer" class=`btn my-2 my-sm-0 ${type === 'mujer' ? 'btn-info' : 'btn-outline-info'}`) mujer
-            a(href="/poleron" class=`btn my-2 my-sm-0 ${type === 'poleron' ? 'btn-info' : 'btn-outline-info'}`) poleron
-          div.btn-group
-            a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 ml-2 my-sm-0`) rebulid
-        a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
-          
+		nav.navbar.navbar-dark.bg-dark
+			.container
+				a.navbar-brand.mb-0.h1(href="#") Navbar
+				div
+					div.btn-group
+						a(href="/" class=`btn my-2 my-sm-0 ${type === 'all' ? 'btn-info' : 'btn-outline-info'}`) all
+						a(href="/hombre" class=`btn my-2 my-sm-0 ${type === 'hombre' ? 'btn-info' : 'btn-outline-info'}`) hombre
+						a(href="/mujer" class=`btn my-2 my-sm-0 ${type === 'mujer' ? 'btn-info' : 'btn-outline-info'}`) mujer
+						a(href="/poleron" class=`btn my-2 my-sm-0 ${type === 'poleron' ? 'btn-info' : 'btn-outline-info'}`) poleron
+					div.btn-group
+						a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 ml-2 my-sm-0`) rebulid
+				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
+					
 
-    // List group
-    .container-fluid
-      .row
-        .col-5.p-0
-          .wrapper.p-2
-            // Button trigger modal
-            button(class=`btn mb-2 ${ equals.length > 0 ? 'btn-danger': 'btn-outline-secondary'}` type='button' data-toggle='modal' data-target='#exampleModal')
-              | handle duplicated
-              span.ml-2=`(${equals.length})`
-            #list-tab.list-group(role='tablist')
-              each val, index in products
-                a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
-                  if val.caution
-                    span.badge.badge-danger.ml-3 file
-                  if val.warning
-                    span.badge.badge-warning.ml-3 folder
-              
-        .col-7
-          .wrapper
-            #nav-tabContent.tab-content.p-2
-              each val, index in products
-                div(class=`tab-pane pane ${index == 0 ? 'active show' : ''}` id=`item-${index}` role='tabpanel' aria-labelledby=val.handle)
-                  nav(aria-label="breadcrumb")
-                    ol.breadcrumb
-                      li.breadcrumb-item.active.small(aria-current="page")=val.folder
-                      li.breadcrumb-item.active.small(aria-current="page")=val.collection
-                      li.breadcrumb-item.active.small(aria-current="page")=val.handle
-                  form(action=`/folder/update` method="post")
-                    .form-group
-                      label(for='newhandle') Handle
-                      input#newhandle.form-control.form-control-sm(type='text' name="newhandle" aria-describedby='emailHelp' value=val.handle)
-                    each err in val.err
-                      .alert.alert-danger.py-1.m-0(role="alert")
-                        p.p-0.m-0
-                          svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
-                            path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
-                          small=err.log
-                    .form-group
-                      label(for='currenthandle') Handle actual
-                      input.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
-                      input.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
-                    button.btn.btn-primary.btn-sm(type='submit') Cambiar
-                  hr
-                  each subval in val.variants
-                    form.my-2(action="/file/update", method="post")
-                      .input-group.input-group-sm
-                        .input-group-prepend
-                          button.btn.btn-outline-secondary( type="submit" id="button-addon1") Update
-                        input.form-control(type='text' aria-label='newhandle' name="newfilename" value=subval.filename)
-                        input.form-control(type='text' aria-label='currenthandle' name="currentfilename" value=subval.filename readonly)
-                        input.form-control(type='text' aria-label='currenthandle' name="path" value=`${val.folder}\\${val.collection}\\${val.handle}` readonly)
-                    each err in subval.errors
-                      .alert.alert-danger.py-1.m-0(role="alert")
-                        p.p-0.m-0
-                          svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
-                            path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
-                          small=err.log
+		// List group
+		.container-fluid
+			.row
+				.col-5.p-0
+					.wrapper.p-2
+						// Button trigger modal
+						button(class=`btn mb-2 ${ equals.length > 0 ? 'btn-danger': 'btn-outline-secondary'}` type='button' data-toggle='modal' data-target='#exampleModal')
+							| handle duplicated
+							span.ml-2=`(${equals.length})`
+						#list-tab.list-group(role='tablist')
+							each val, index in products
+								a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
+									if val.caution
+										span.badge.badge-danger.ml-3 file
+									if val.warning
+										span.badge.badge-warning.ml-3 folder
+							
+				.col-7
+					.wrapper
+						#nav-tabContent.tab-content.p-2
+							each val, index in products
+								div(class=`tab-pane pane ${index == 0 ? 'active show' : ''}` id=`item-${index}` role='tabpanel' aria-labelledby=val.handle)
+									nav(aria-label="breadcrumb")
+										ol.breadcrumb
+											li.breadcrumb-item.active.small(aria-current="page")=val.folder
+											li.breadcrumb-item.active.small(aria-current="page")=val.collection
+											li.breadcrumb-item.active.small(aria-current="page")=val.handle
+									form(action="/file/titleupdate", method="post")
+										.form-group
+											label(for='newtitle') Title
+											input#newtitle.form-control.form-control-sm(type='text' name="newtitle" aria-describedby='emailHelp' value=val.title)
+										.form-group
+											label(for='newtitle') Title actual
+											input#newtitle.form-control.form-control-sm(type='text' name="currenttitle" aria-describedby='emailHelp' value=val.title readonly)
+											input#path.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}\\${val.handle}`)
+										button.btn.btn-primary.btn-sm(type='submit') actualizar
+									hr
+									form(action="/folder/update" method="post")
+										.form-group
+											label(for='newhandle') Handle
+											input#newhandle.form-control.form-control-sm(type='text' name="newhandle" aria-describedby='emailHelp' value=val.handle)
+										each err in val.err
+											.alert.alert-danger.py-1.m-0(role="alert")
+												p.p-0.m-0
+													svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+														path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+													small=err.log
+										.form-group
+											label(for='currenthandle') Handle actual
+											input.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
+											input.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
+										button.btn.btn-primary.btn-sm(type='submit') Cambiar
+									hr
+									each subval in val.variants
+										form.my-2(action="/file/update", method="post")
+											.input-group.input-group-sm
+												.input-group-prepend
+													button.btn.btn-primary( type="submit" id="button-addon1") Update
+												input.form-control(type='text' aria-label='newhandle' name="newfilename" value=subval.filename)
+												input.form-control(type='text' aria-label='currenthandle' name="currentfilename" value=subval.filename readonly)
+												input.form-control.d-none(type='text' aria-label='currenthandle' name="path" value=`${val.folder}\\${val.collection}\\${val.handle}` readonly)
+										each err in subval.errors
+											.alert.alert-danger.py-1.m-0(role="alert")
+												p.p-0.m-0
+													svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+														path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+													small=err.log
 
-          
-    script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')
-    script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js' integrity='sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin='anonymous')
-    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' integrity='sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV' crossorigin='anonymous')
+					
+		script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')
+		script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js' integrity='sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin='anonymous')
+		script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' integrity='sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV' crossorigin='anonymous')
 
