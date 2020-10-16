@@ -3,18 +3,14 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require('body-parser')
 const {router} = require('./app/index');
-const {renameFileTofolder} = require('./app/helpers/errorslog')
-const {fixedFilestoFolder} = require('./app/helpers/index')
-const {menDir, womanDir, poleronDir} =require('./app/config/index')
+const {menDir, womanDir, poleronDir,baseDir} =require('./app/config/index')
 
-// fixedFilestoFolder(menDir, womanDir, poleronDir)
-
-// console.log(renameFileTofolder('beast_gorilla','Polera_blanca_gorila_pesas.jpg',"Poleras hombre","blanco"))
 
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'pug');
 app.use(cors());
 app.use(express.static('public'));
+app.use('/base', express.static(baseDir));
 app.use(
   "/static/polerahombre",
   express.static(menDir.images)

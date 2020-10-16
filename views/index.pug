@@ -101,6 +101,9 @@ html(lang="en")
 										button.btn.btn-primary.btn-sm(type='submit') Cambiar
 									hr
 									each subval in val.variants
+										img.img-prev(src=`http://localhost:3000/base/${val.folder.split('\\')[val.folder.split('\\').length - 1]}/${val.collection}/${val.handle}/${subval.filename}`, alt="sss")
+									hr
+									each subval in val.variants
 										form.my-2(action="/file/update", method="post")
 											.input-group.input-group-sm
 												.input-group-prepend

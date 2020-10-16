@@ -1,8 +1,19 @@
 .wrapper {
-  height: calc(100vh - 56px);
-  overflow-y: auto;
+	height: calc(100vh - 56px);
+	overflow-y: auto;
 }
 
 .list-folder-item {
-  font-size: 0.8rem !important;
+	font-size: 0.8rem !important;
+}
+
+.img-prev {
+	max-width: 100%;
+}
+
+.img-prev:hover {
+	width: 100px;
+	height: 100px;
+	opacity: 0.5;
+	transform: scale(1.2);
 }
