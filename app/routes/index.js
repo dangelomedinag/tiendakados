@@ -5,8 +5,8 @@ const config = require('../config/index')
 module.exports = () =>{
   let routes = {
     'get': {
-      '/': (req, res, next) => {
-        let products = h.readFolder(config.menDir, config.womanDir, config.poleronDir)
+      '/': async (req, res, next) => {
+        let products = await h.readFolder(config.menDir, config.womanDir, config.poleronDir)
         let arrRep = [];
         let ccc = products
           .map((res) => res.handle)
@@ -25,14 +25,14 @@ module.exports = () =>{
         });
         res.end()
       },
-      '/:type': (req, res, next) => {
+      '/:type': async(req, res, next) => {
         let products;
 
         
         const {type} = req.params
 
         if(type === 'hombre'){
-          products = h.readFolder(config.menDir)
+          products = await h.readFolder(config.menDir)
           let arrRep = [];
           products
             .map((res) => res.handle)
@@ -50,7 +50,7 @@ module.exports = () =>{
           });
           res.end()
         }else if(type === 'mujer'){
-          products = h.readFolder(config.womanDir)
+          products = await h.readFolder(config.womanDir)
           let arrRep = [];
           products
             .map((res) => res.handle)
@@ -68,7 +68,7 @@ module.exports = () =>{
           });
           res.end()
         }else if(type === 'poleron'){
-          products = h.readFolder(config.poleronDir)
+          products = await h.readFolder(config.poleronDir)
           let arrRep = [];
           products
             .map((res) => res.handle)
@@ -158,10 +158,10 @@ module.exports = () =>{
         res.redirect('/')
        
       },
-      '/file/titleupdate': (req, res, next) => {
-				const {path,currenttitle, newtitle } = req.body
+      '/file/titleupdate': async(req, res, next) => {
+				const {path,currenttitle, newtitle , product_id} = req.body
 				
-        h.updateTitlefile(path, currenttitle,newtitle)
+        await h.updateTitlefile(path, currenttitle,newtitle,product_id)
 				
         res.redirect('/')
        

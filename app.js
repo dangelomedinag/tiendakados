@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const bodyParser = require('body-parser')
-const {router} = require('./app/index');
+const {router, routerShopify} = require('./app/index');
+
 const {menDir, womanDir, poleronDir,baseDir} =require('./app/config/index')
 
 
@@ -26,6 +27,7 @@ app.use(
 app.use(bodyParser.json()) 
 app.use(bodyParser.urlencoded({ extended: false }))
 
+app.use('/shopify/api', routerShopify());
 app.use('/', router());
 
 app.listen(app.get('port'), ()=> console.log(`work on http://localhost:${app.get('port')}`))

@@ -8,12 +8,12 @@
 }
 
 .img-prev {
+	width: 100px;
+	height: 100px;
 	max-width: 100%;
+	cursor: pointer;
 }
 
 .img-prev:hover {
-	width: 100px;
-	height: 100px;
 	opacity: 0.5;
-	transform: scale(1.2);
 }

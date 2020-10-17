@@ -1,3 +1,4 @@
 module.exports = {
-  router: require('./routes/')
+	router: require('./routes/'),
+	routerShopify: require('./routes/shopifyRouter')
 }

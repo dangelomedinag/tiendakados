@@ -1,7 +1,9 @@
 const {Router} = require('express');
 const config = require('../config/index')
+const shopifyconfig = require('../config/shopify.config')
 const {errLogs, detectColor, detectType, detectPrice, renameFileTofolder, errLogsProducts} = require('./errorslog')
 const path = require('path')
+const axios = require('axios').default;
 const fs = require('fs')
 const router = Router()
 const { v4: uuidv4 } = require("uuid");
@@ -43,8 +45,18 @@ let route = routes => {
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
-const readFolder = (...rest) =>{
+const readFolder = async(...rest) =>{
 	let productArr = []
+	let productShopifyArr = []
+	let productShopifyArrHandles = []
+	try {
+		let {data} = await axios.get(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/product_listings.json?limit=250`)
+		productShopifyArr = await data.product_listings
+		productShopifyArrHandles = await data.product_listings.map(res => res.handle)
+		// console.log(productShopifyArrHandles)
+	} catch (error) {
+		console.log(error)
+	}
 
   rest.forEach(obj => {
     let dir = obj.collection;
@@ -54,7 +66,15 @@ const readFolder = (...rest) =>{
       let collectionsArr = fs.readdirSync(dir);
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
-        foldersArr.forEach(product => {
+        foldersArr.forEach((product) => {
+					let shopifyStatus = false
+					let shopifyData = []
+					if (productShopifyArrHandles.includes(product)){
+						shopifyStatus =  true
+						shopifyData = productShopifyArr.filter(item=> item.handle === product)
+					} else {
+						shopifyStatus =  false
+					}
 					let title = false;
 					let caution = false;
 					let warning = false;
@@ -74,7 +94,6 @@ const readFolder = (...rest) =>{
 							return
 						}
 						let type = detectType(variant)
-						
 						let {color} = detectColor(variant,type)
 						let logs = errLogs(variant)
 						listColors.push({color,filename: variant, errors: logs})
@@ -85,6 +104,8 @@ const readFolder = (...rest) =>{
 					})
 
 					let productObj = {
+						shopifyStatus,
+						shopifyData,
 						folder: dir,
 						collection,
 						handle: product,
@@ -324,9 +345,21 @@ const createTitleFromtxt = (...rest) => {
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
-const updateTitlefile = (fullpath, currenttitle, newtitle) => {
+const updateTitlefile = async(fullpath, currenttitle, newtitle, product_id) => {
 	try {
 		fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), newtitle.toString())
+		try {
+			const update = await axios.put(`https://722f149a23db579ae9f14307c9344fe3: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@storetets.myshopify.com/admin/api/2020-10/products/${product_id}.json`, {
+				product: {
+					id: product_id,
+					title: newtitle
+				}
+			})
+			let res =  await update.data
+			console.log(res)
+		} catch (error) {
+			console.log('AQUIIIIIIIII: ',error)
+		}
 	} catch (error) {
 		console.log(error)
 	}
