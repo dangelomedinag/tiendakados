@@ -51,14 +51,17 @@ html(lang="en")
 						#list-tab.list-group(role='tablist')
 							each val, index in products
 								a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
-									if val.caution
-										span.badge.badge-danger.ml-3 file
-									if val.warning
-										span.badge.badge-warning.ml-3 folder
-									if !val.title
-										span.badge.badge-warning.ml-3 no title
-									if val.shopifyStatus
-										span.badge.badge-success.ml-3 in shopify
+									div.d-inline-block.ml-1
+										ul.list-group.list-group-horizontal.m-0.p-0.text-white
+											if val.caution
+												li.list-group-item.bg-danger.m-0.p-0.small file
+											if val.warning
+												li.list-group-item.bg-warning.m-0.p-0.small folder
+											if !val.title
+												li.list-group-item.bg-info.m-0.p-0.small no title
+											if val.shopifyStatus
+												li.list-group-item.bg-success.m-0.p-0.small shopify
+									//- span.m-auto xx
 							
 				.col-7
 					.wrapper
@@ -72,9 +75,13 @@ html(lang="en")
 											li.breadcrumb-item.active.small(aria-current="page")=val.handle
 									div.alert.alert-info
 										each shopData in val.shopifyData
-											h4.alert-heading in shopify
+											div.d-flex.flex-row.justify-content-between
+												h6.alert-heading.mb-0
+													include ./includes/_shopify-icon.pug
+													| Shopify: exist product
+												a.btn.btn-info.btn-sm(href="/file/shopifyfilereset") refresh
 											hr
-											p.mb-0=`product_id = ${shopData.product_id} | title = ${shopData.title} | created_at = ${shopData.created_at}`
+											p.mb-0.small=`product_id = ${shopData.product_id} | title = ${shopData.title} | created_at = ${shopData.created_at} | handle = ${shopData.handle}`
 									form(action="/file/titleupdate", method="post")
 										.form-group
 											label(for='newtitle') Title

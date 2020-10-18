@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require('body-parser')
 const {router, routerShopify} = require('./app/index');
-
+require('./app/helpers/class/products')
 const {menDir, womanDir, poleronDir,baseDir} =require('./app/config/index')
 
 

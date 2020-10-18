@@ -17,3 +17,9 @@
 .img-prev:hover {
 	opacity: 0.5;
 }
+
+.shopify-icon {
+	width: 1em;
+	height: 1em;
+	fill: rgb(85, 155, 68);
+}

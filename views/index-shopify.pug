@@ -3,12 +3,12 @@ html(lang="en")
 	head
 		meta(charset="UTF-8")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
+
 		title Kados Shopify API
 	body
-		h1 Hello world!
-		p=shopConfig.app_name
-		p=shopConfig.API_key
-		p=shopConfig.store
-		p=shopConfig.store_admin
-		p=shopConfig.password
-		p=shopConfig.secret
+		ul
+			each val, index in productsArr
+				li=`${val.handle} - ${val.id} - (${index + 1})`
+		p.small=nextlink
+		a.btn.btn-outline-primary(href=`/shopify/api/pagination/${nextlink}`) next ->

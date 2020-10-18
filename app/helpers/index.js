@@ -47,16 +47,7 @@ let route = routes => {
 
 const readFolder = async(...rest) =>{
 	let productArr = []
-	let productShopifyArr = []
-	let productShopifyArrHandles = []
-	try {
-		let {data} = await axios.get(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/product_listings.json?limit=250`)
-		productShopifyArr = await data.product_listings
-		productShopifyArrHandles = await data.product_listings.map(res => res.handle)
-		// console.log(productShopifyArrHandles)
-	} catch (error) {
-		console.log(error)
-	}
+	
 
   rest.forEach(obj => {
     let dir = obj.collection;
@@ -69,12 +60,12 @@ const readFolder = async(...rest) =>{
         foldersArr.forEach((product) => {
 					let shopifyStatus = false
 					let shopifyData = []
-					if (productShopifyArrHandles.includes(product)){
-						shopifyStatus =  true
-						shopifyData = productShopifyArr.filter(item=> item.handle === product)
-					} else {
-						shopifyStatus =  false
-					}
+					// if (productShopifyArrHandles.includes(product)){
+					// 	shopifyStatus =  true
+					// 	shopifyData = productShopifyArr.filter(item=> item.handle === product)
+					// } else {
+					// 	shopifyStatus =  false
+					// }
 					let title = false;
 					let caution = false;
 					let warning = false;
@@ -88,6 +79,16 @@ const readFolder = async(...rest) =>{
 						if (variant === "__title__.txt") {
 							try {
 								title = fs.readFileSync(path.resolve(dir, collection, product, variant), {encoding:"utf-8"})
+							} catch (error) {
+								console.log(error)
+							}
+							return
+						} else if(variant === "__shopify__.json"){
+							try {
+								let shopifyJSON = fs.readFileSync(path.resolve(dir, collection, product, variant), {encoding:"utf-8"})
+								// console.log(JSON.parse(shopifyJSON).product_id)
+								shopifyStatus = true
+								shopifyData = [JSON.parse(shopifyJSON)];
 							} catch (error) {
 								console.log(error)
 							}
@@ -134,7 +135,6 @@ const readFolder = async(...rest) =>{
 ///////////////////////////////////////////////////////////////////////////////////////
 
 const updateFolder = (fullpath, currenthandel, newhandel) => {
-
 	try {
 		fs.renameSync(path.resolve(fullpath, currenthandel), path.resolve(fullpath, newhandel))
 	} catch (error) {
@@ -305,7 +305,18 @@ const fixedFilestoFolder = (...rest) => {
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
-const createTitleFromtxt = (...rest) => {
+const createTitleFromtxt = async(...rest) => {
+	let productShopifyArr = []
+	let productShopifyArrHandles = []
+	try {
+		let {data} = await axios.get(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/products.json?limit=250`)
+		productShopifyArr = await data.products
+		productShopifyArrHandles = await data.products.map(res => res.handle)
+		// console.log(productShopifyArrHandles)
+	} catch (error) {
+		console.log(error)
+	}
+
 	rest.forEach(obj => {
 		let dir = obj.collection
 
@@ -314,6 +325,20 @@ const createTitleFromtxt = (...rest) => {
       collectionsArr.forEach(collection => {
         let foldersArr = fs.readdirSync(path.resolve(dir, collection));
         foldersArr.forEach(product => {
+					let shopifyData;
+					try {
+						fs.accessSync(path.resolve(dir, collection, product, "__shopify__.json"), fs.constants.F_OK)
+					} catch (err) {
+						if (productShopifyArrHandles.includes(product)){
+							shopifyData = productShopifyArr.filter(item=> item.handle === product)
+							try {
+								fs.writeFileSync(path.resolve(dir, collection, product, "__shopify__.json"), JSON.stringify(shopifyData[0]))
+								console.log('create file ___shopify__.json in: ', product);
+							} catch (error) {
+								console.log('error: ', error, product)
+							}
+						}
+					}
 					try {
 						fs.accessSync(path.resolve(dir, collection, product, "__title__.txt"), fs.constants.F_OK)
 					} catch (err) {
@@ -346,6 +371,33 @@ const createTitleFromtxt = (...rest) => {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 const updateTitlefile = async(fullpath, currenttitle, newtitle, product_id) => {
+	try {
+		fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), newtitle.toString())
+		try {
+			const update = await axios.put(`https://722f149a23db579ae9f14307c9344fe3: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@storetets.myshopify.com/admin/api/2020-10/products/${product_id}.json`, {
+				product: {
+					id: product_id,
+					title: newtitle
+				}
+			})
+			let res =  await update.data
+			console.log(res)
+		} catch (error) {
+			console.log('AQUIIIIIIIII: ',error)
+		}
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////                                                                             /////
+                        /* resetfileshopify */
+/////                                                                             /////
+///////////////////////////////////////////////////////////////////////////////////////
+
+const resetfileshopify = async(fullpath, currenttitle, newtitle, product_id) => {
 	try {
 		fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), newtitle.toString())
 		try {

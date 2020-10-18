@@ -95,11 +95,12 @@ module.exports = () =>{
         res.redirect('/');
         res.end()
       },
-      '/fn/createtitletxt': (req, res, next) => {
-        h.createTitleFromtxt(config.menDir, config.womanDir, config.poleronDir)
+      '/fn/createtitletxt': async(req, res, next) => {
+        await h.createTitleFromtxt(config.menDir, config.womanDir, config.poleronDir)
         res.redirect('/');
         res.end()
       },
+      
       '/api/all': (req, res, next) => {
         let products = h.getProducts(false, config.menDir, config.womanDir, config.poleronDir)
 
@@ -160,7 +161,7 @@ module.exports = () =>{
       },
       '/file/titleupdate': async(req, res, next) => {
 				const {path,currenttitle, newtitle , product_id} = req.body
-				
+				console.log(product_id)
         await h.updateTitlefile(path, currenttitle,newtitle,product_id)
 				
         res.redirect('/')
