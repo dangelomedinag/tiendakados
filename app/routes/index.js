@@ -1,4 +1,5 @@
 const h = require('../helpers');
+const updateProduct = require('../helpers/updateproduct.js')
 const readfolder = require('../helpers/products/products.js');
 const config = require('../config/index')
 
@@ -8,7 +9,7 @@ module.exports = () =>{
     'get': {
       '/': (req, res, next) => {
 				const read = readfolder(config.menDir, config.womanDir, config.poleronDir)
-				console.log(read.products[0].cloudstatus)
+				// console.log(read.products[0].cloudstatus)
         res.status(200).render('index', {
 					products: read.products,
 					duplicates: read.duplicates,
@@ -17,64 +18,34 @@ module.exports = () =>{
 				});
         res.end()
       },
-      '/:type': async(req, res, next) => {
-        let products;
-
-        
+      '/:type': (req, res, next) => {
         const {type} = req.params
 
         if(type === 'hombre'){
-          products = await h.readFolder(config.menDir)
-          let arrRep = [];
-          products
-            .map((res) => res.handle)
-            .reduce(
-              (newTempArr, el) =>
-                newTempArr.includes(el)
-                  ? (arrRep = [...arrRep, el])
-                  : [...newTempArr, el],
-              []
-            );
+          const read = readfolder(config.menDir)
           res.status(200).render('index', {
-            products,
-            type,
-            equals: arrRep
+            products: read.products,
+            duplicates: read.duplicates,
+            collections: read.collections,
+            handles: read.handles
           });
           res.end()
         }else if(type === 'mujer'){
-          products = await h.readFolder(config.womanDir)
-          let arrRep = [];
-          products
-            .map((res) => res.handle)
-            .reduce(
-              (newTempArr, el) =>
-                newTempArr.includes(el)
-                  ? (arrRep = [...arrRep, el])
-                  : [...newTempArr, el],
-              []
-            );
+          const read = readfolder(config.womanDir)
           res.status(200).render('index', {
-            products,
-            type,
-            equals: arrRep
+            products: read.products,
+            duplicates: read.duplicates,
+            collections: read.collections,
+            handles: read.handles
           });
           res.end()
         }else if(type === 'poleron'){
-          products = await h.readFolder(config.poleronDir)
-          let arrRep = [];
-          products
-            .map((res) => res.handle)
-            .reduce(
-              (newTempArr, el) =>
-                newTempArr.includes(el)
-                  ? (arrRep = [...arrRep, el])
-                  : [...newTempArr, el],
-              []
-            );
+          const read = readfolder(config.poleronDir)
           res.status(200).render('index', {
-            products,
-            type,
-            equals: arrRep
+            products: read.products,
+            duplicates: read.duplicates,
+            collections: read.collections,
+            handles: read.handles
           });
           res.end()
         }else{
@@ -158,6 +129,11 @@ module.exports = () =>{
 				
         res.redirect('/')
        
+      },
+      '/update/product': (req, res, next) => {
+        updateProduct(req.body)
+				// console.log(req.body)
+        res.send(req.body)
       }
     },
     'NA': (req, res, next) => {

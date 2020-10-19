@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 module.exports = {
-	store: 'storetets.myshopify.com/',
-	store_admin: 'storetets.myshopify.com/admin',
-	app_name: 'storetestapi',
-	emergency_developer_email: 'snakesfc@gmail',
+	store: 'kados-chile.myshopify.com/',
+	store_admin: 'kados-chile.myshopify.com/admin/',
+	app_name: 'kadosinternal',
+	emergency_developer_email: 'kados@kreados.cl',
 	API_key: process.env.API_KEY_SHOPIFY,
 	password: process.env.API_KEY_PASSWORD,
 	secret: process.env.API_SECRET_SHOPIFY

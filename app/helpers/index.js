@@ -220,6 +220,9 @@ const getProducts = (rebuild, ...rest) => {
 							}
 							return
 						}
+						if (variant === "__shopify__.json") {
+							return
+						}
 						type = detectType(variant)
 						let {color, sort} = detectColor(variant, type);
 						// console.log(detectColor(variant,type))
@@ -237,7 +240,7 @@ const getProducts = (rebuild, ...rest) => {
 						}
 					})
 					let productObj = {
-						collection,
+						collection: collection === 'anime-comic' ? 'anime / comic' : collection,
 						handle: product,
 						title: title ? title : titleDefault,
 						type,
@@ -310,7 +313,9 @@ const createTitleFromtxt = async(...rest) => {
 	let productShopifyArrHandles = []
 	try {
 		let {data} = await axios.get(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/products.json?limit=250`)
+		// let {data} = await axios.get(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@kados-chile.myshopify.com/admin/api/2020-10/products.json?limit=250&page_info=eyJkaXJlY3Rpb24iOiJuZXh0IiwibGFzdF9pZCI6NTcyMDQzNDY3MTc4MSwibGFzdF92YWx1ZSI6IlN0cmFuZ2VyIHRoaW5ncyBhYmVjZWRhcmlvIGx1Y2VzIHNlcmllcyJ9`)
 		productShopifyArr = await data.products
+		// console.log('aqui: ',data)
 		productShopifyArrHandles = await data.products.map(res => res.handle)
 		// console.log(productShopifyArrHandles)
 	} catch (error) {
