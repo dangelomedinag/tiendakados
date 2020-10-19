@@ -417,29 +417,18 @@ const renameFileTofolder = (product, variant, type, color) =>{
 
 
 
-const errLogsProducts = (product) => {
-
-  let checkFiles = {
-    errors: [],
-  };
+const checkHandle = (product) => {
+  let errors = [];
   
   /* folder */
-
   if (product.includes("-") || product.includes("&") || product.includes("¿") || product.includes("¡") || product.includes("!") || product.includes("@") || product.includes("#") || product.includes("$") || product.includes("'") || product.includes(" ") || product.includes("á") || product.includes("é") || product.includes("í") || product.includes("ú") || product.includes("ú") || product.includes("à") || product.includes("è") || product.includes("ì") || product.includes("ò") || product.includes("ù")|| product.includes("ñ") || product.includes("~") || product.includes("(") || product.includes(")") || product.includes(",") || product.includes(".") || product.includes("=") || product.includes('"') || product.includes("?") || product.includes("/") || product.includes("\\") || product.includes("*") || product.includes("ç") || product.includes("<") || product.includes(">") || product.includes("+"))  {
-    checkFiles.EspCharacter = true;
-    checkFiles.errors.push({
-      product,
-      type: product,
-      log:
-        'Nombre de carpeta no puede contener caracteres espaciales ni espacio en blanco',
-    });
-  }
+  errors.push('Nombre de carpeta no puede contener caracteres espaciales ni espacio en blanco')}
 
-  return checkFiles.errors
+  return errors
 }
 
 const parseDescription = (product) =>{
 	return product.replace(/(_|-|\.)/g," ")
 }
 
-module.exports = {checkErrors, checkColor, checkType, ckeckPrice, renameFileTofolder, errLogsProducts}
+module.exports = {checkErrors, checkColor, checkType, ckeckPrice, checkHandle, renameFileTofolder, }

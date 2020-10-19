@@ -7,36 +7,19 @@ html(lang="en")
 		link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
 		link(rel="stylesheet", href="./css/style.css")
 	body
-		// Modal
-		#exampleModal.modal.fade.show(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
-			.modal-dialog
-				.modal-content
-					.modal-header
-						h5#exampleModalLabel.modal-title Anuncio
-						button.close(type='button' data-dismiss='modal' aria-label='Close')
-							span(aria-hidden='true') &times;
-					.modal-body
-						if equals.length > 0
-							each val, index in equals
-								p=val
-						else
-							p.lead NO EXISTEN PRODUCTOS CON HANDLE REPETIDOS
-					.modal-footer
-						button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-
 		nav.navbar.navbar-dark.bg-dark
 			.container
 				a.navbar-brand.mb-0.h1(href="#") kados
 				div
 					div.btn-group
-						a(href="/" class=`btn my-2 my-sm-0 ${type === 'all' ? 'btn-info' : 'btn-outline-info'}`) all
-						a(href="/hombre" class=`btn my-2 my-sm-0 ${type === 'hombre' ? 'btn-info' : 'btn-outline-info'}`) hombre
-						a(href="/mujer" class=`btn my-2 my-sm-0 ${type === 'mujer' ? 'btn-info' : 'btn-outline-info'}`) mujer
-						a(href="/poleron" class=`btn my-2 my-sm-0 ${type === 'poleron' ? 'btn-info' : 'btn-outline-info'}`) poleron
+						a(href="/" class=`btn my-2 my-sm-0 btn-outline-info`) all
+						a(href="/hombre" class=`btn my-2 my-sm-0 btn-outline-info`) hombre
+						a(href="/mujer" class=`btn my-2 my-sm-0 btn-outline-info`) mujer
+						a(href="/poleron" class=`btn my-2 my-sm-0 btn-outline-info`) poleron
 					div.btn-group.ml-2
 						a(href="/fn/renamefiles" class=`btn btn-outline-secondary my-2 my-sm-0`) rebulid
 						a(href="/fn/createtitletxt" class=`btn btn-outline-secondary my-2 my-sm-0`) txt title files
-				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 ${products.filter(res => res.caution).length > 0 || products.filter(res => res.warning).length > 0 || equals.length > 0 || products.filter(res => !res.title).length > 0 ? 'disabled btn-outline-secondary': 'btn-primary'}`) continue
+				a(href="http://localhost:5000" class=`btn my-2 my-sm-0 btn-primary`) continue
 					
 
 		// List group
@@ -44,95 +27,123 @@ html(lang="en")
 			.row
 				.col-5.p-0
 					.wrapper.p-2
-						// Button trigger modal
-						button(class=`btn mb-2 ${ equals.length > 0 ? 'btn-danger': 'btn-outline-secondary'}` type='button' data-toggle='modal' data-target='#exampleModal')
-							| handle duplicated
-							span.ml-2=`(${equals.length})`
-						#list-tab.list-group(role='tablist')
-							each val, index in products
-								a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${index}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
-									div.d-inline-block.ml-1
-										ul.list-group.list-group-horizontal.m-0.p-0.text-white
-											if val.caution
-												li.list-group-item.bg-danger.m-0.p-0.small file
-											if val.warning
-												li.list-group-item.bg-warning.m-0.p-0.small folder
-											if !val.title
-												li.list-group-item.bg-info.m-0.p-0.small no title
-											if val.shopifyStatus
-												li.list-group-item.bg-success.m-0.p-0.small shopify
-									//- span.m-auto xx
+						div
+							p.lead.text-center=`Handles duplicados ( ${duplicates.length} )`
+							#list-tab-duplicates.list-group.mb-3(role='tablist')
+								each val, index in duplicates
+									a(class=`list-group-item list-group-item-action p-2 list-folder-item` data-toggle='list' href=`#item-${val.uuid}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
+										div.d-inline-block.ml-1
+											ul.list-group.list-group-horizontal.m-0.p-0.text-white
+												li.list-group-item.bg-danger.m-0.p-0.small=`duplicate ${index +1}`
+						div
+							p.lead.text-center=`Productos ( ${products.length} )`
+							#list-tab-products.list-group(role='tablist')
+								each val, index in products
+									a(class=`list-group-item list-group-item-action p-2 list-folder-item ${index == 0 ? 'active' : 0}` data-toggle='list' href=`#item-${val.uuid}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
+										if val.errors.length > 0
+											div.d-inline-block.ml-1
+												ul.list-group.list-group-horizontal.m-0.p-0.text-white
+													li.list-group-item.bg-danger.m-0.p-0.small errors
 							
 				.col-7
 					.wrapper
 						#nav-tabContent.tab-content.p-2
 							each val, index in products
-								div(class=`tab-pane pane ${index == 0 ? 'active show' : ''}` id=`item-${index}` role='tabpanel' aria-labelledby=val.handle)
+								div(class=`tab-pane pane ${index == 0 ? 'active show' : ''}` id=`item-${val.uuid}` role='tabpanel' aria-labelledby=`${val.uuid}`)
+									div.alert.alert-info
+										div.d-flex.flex-row.justify-content-between
+											include ./includes/_shopify-icon.pug
+											p.lead.alert-heading.mb-0=`Shopify Store: ${val.cloudstatus.data.title}`
+											a.btn.btn-info.btn-sm(href="#") refresh
+										hr
+										p.mb-0.small=`product_id = ${val.cloudstatus.data.id} | created_at = ${val.cloudstatus.data.created_at} | handle = ${val.cloudstatus.data.handle} | variants = ${val.cloudstatus.data.variants.length}`
 									nav(aria-label="breadcrumb")
 										ol.breadcrumb
-											li.breadcrumb-item.active.small(aria-current="page")=val.folder
-											li.breadcrumb-item.active.small(aria-current="page")=val.collection
-											li.breadcrumb-item.active.small(aria-current="page")=val.handle
-									div.alert.alert-info
-										each shopData in val.shopifyData
-											div.d-flex.flex-row.justify-content-between
-												h6.alert-heading.mb-0
-													include ./includes/_shopify-icon.pug
-													| Shopify: exist product
-												a.btn.btn-info.btn-sm(href="/file/shopifyfilereset") refresh
-											hr
-											p.mb-0.small=`product_id = ${shopData.product_id} | title = ${shopData.title} | created_at = ${shopData.created_at} | handle = ${shopData.handle}`
-									form(action="/file/titleupdate", method="post")
-										.form-group
-											label(for='newtitle') Title
-											input#newtitle.form-control.form-control-sm(type='text' name="newtitle" aria-describedby='emailHelp' value=val.title)
-											each shopData in val.shopifyData
-												input#productid.form-control.form-control-sm.d-none(type='text' name="product_id" aria-describedby='emailHelp' value=shopData.product_id)
-											if !val.title
-												.alert.alert-danger.py-1.m-0.mt-1(role="alert")
-													p.p-0.m-0
-														svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
-															path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
-														small no exite titulo para este producto
-										.form-group
-											label(for='newtitle') Title actual
-											input#newtitle.form-control.form-control-sm(type='text' name="currenttitle" aria-describedby='emailHelp' value=val.title readonly)
-											input#path.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}\\${val.handle}`)
-										button.btn.btn-primary.btn-sm(type='submit') actualizar
-									hr
-									form(action="/folder/update" method="post")
-										.form-group
-											label(for='newhandle') Handle
-											input#newhandle.form-control.form-control-sm(type='text' name="newhandle" aria-describedby='emailHelp' value=val.handle)
-										each err in val.err
-											.alert.alert-danger.py-1.m-0(role="alert")
-												p.p-0.m-0
-													svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
-														path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
-													small=err.log
-										.form-group
-											label(for='currenthandle') Handle actual
-											input.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
-											input.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
-										button.btn.btn-primary.btn-sm(type='submit') Cambiar
-									hr
-									each subval in val.variants
-										img.img-prev(src=`http://localhost:3000/base/${val.folder.split('\\')[val.folder.split('\\').length - 1]}/${val.collection}/${val.handle}/${subval.filename}`, alt="sss")
-									hr
-									each subval in val.variants
-										form.my-2(action="/file/update", method="post")
-											.input-group.input-group-sm
-												.input-group-prepend
-													button.btn.btn-primary( type="submit" id="button-addon1") Update
-												input.form-control(type='text' aria-label='newhandle' name="newfilename" value=subval.filename)
-												input.form-control(type='text' aria-label='currenthandle' name="currentfilename" value=subval.filename readonly)
-												input.form-control.d-none(type='text' aria-label='currenthandle' name="path" value=`${val.folder}\\${val.collection}\\${val.handle}` readonly)
-										each err in subval.errors
-											.alert.alert-danger.py-1.m-0(role="alert")
-												p.p-0.m-0
-													svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
-														path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
-													small=err.log
+											li.breadcrumb-item.active.small(aria-current="page")=val.path
+									form(action="#", method="post")
+										.container
+											.form-row
+												.col.form-group
+													label.col-form-label.col-form-label-sm(for="title") Title
+													input.form-control.form-control-sm(id='title' name="title" type="text" value=val.title)
+												.col.form-group
+													label.col-form-label.col-form-label-sm(for="handle") Handle
+													input.form-control.form-control-sm(id='handle' name="handle" type="text" value=val.handle)
+											.form-row
+												.col.form-group
+													label.col-form-label.col-form-label-sm(for="handle") Handle
+													each subval in val.variants
+														input.form-control.form-control-sm(id='handle' name="handle" type="text" value=val.handle)
+				//- .col-7
+				//- 	.wrapper
+				//- 		#nav-tabContent.tab-content.p-2
+				//- 			each val, index in products
+				//- 				div(class=`tab-pane pane ${index == 0 ? 'active show' : ''}` id=`item-${val.uuid}` role='tabpanel' aria-labelledby=val.handle)
+				//- 					nav(aria-label="breadcrumb")
+				//- 						ol.breadcrumb
+				//- 							li.breadcrumb-item.active.small(aria-current="page")=val.folder
+				//- 							li.breadcrumb-item.active.small(aria-current="page")=val.collection
+				//- 							li.breadcrumb-item.active.small(aria-current="page")=val.handle
+				//- 					div.alert.alert-info
+				//- 						each shopData in val.shopifyData
+				//- 							div.d-flex.flex-row.justify-content-between
+				//- 								h6.alert-heading.mb-0
+				//- 									include ./includes/_shopify-icon.pug
+				//- 									| Shopify: exist product
+				//- 								a.btn.btn-info.btn-sm(href="/file/shopifyfilereset") refresh
+				//- 							hr
+				//- 							p.mb-0.small=`product_id = ${shopData.product_id} | title = ${shopData.title} | created_at = ${shopData.created_at} | handle = ${shopData.handle}`
+				//- 					form(action="/file/titleupdate", method="post")
+				//- 						.form-group
+				//- 							label(for='newtitle') Title
+				//- 							input#newtitle.form-control.form-control-sm(type='text' name="newtitle" aria-describedby='emailHelp' value=val.title)
+				//- 							each shopData in val.shopifyData
+				//- 								input#productid.form-control.form-control-sm.d-none(type='text' name="product_id" aria-describedby='emailHelp' value=shopData.product_id)
+				//- 							if !val.title
+				//- 								.alert.alert-danger.py-1.m-0.mt-1(role="alert")
+				//- 									p.p-0.m-0
+				//- 										svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+				//- 											path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+				//- 										small no exite titulo para este producto
+				//- 						.form-group
+				//- 							label(for='newtitle') Title actual
+				//- 							input#newtitle.form-control.form-control-sm(type='text' name="currenttitle" aria-describedby='emailHelp' value=val.title readonly)
+				//- 							input#path.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}\\${val.handle}`)
+				//- 						button.btn.btn-primary.btn-sm(type='submit') actualizar
+				//- 					hr
+				//- 					form(action="/folder/update" method="post")
+				//- 						.form-group
+				//- 							label(for='newhandle') Handle
+				//- 							input#newhandle.form-control.form-control-sm(type='text' name="newhandle" aria-describedby='emailHelp' value=val.handle)
+				//- 						each err in val.err
+				//- 							.alert.alert-danger.py-1.m-0(role="alert")
+				//- 								p.p-0.m-0
+				//- 									svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+				//- 										path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+				//- 									small=err.log
+				//- 						.form-group
+				//- 							label(for='currenthandle') Handle actual
+				//- 							input.form-control.form-control-sm(type='text' name="currenthandle" aria-describedby='emailHelp' value=val.handle readonly)
+				//- 							input.form-control.form-control-sm.d-none(type='text' name="path" aria-describedby='emailHelp' value=`${val.folder}\\${val.collection}` readonly)
+				//- 						button.btn.btn-primary.btn-sm(type='submit') Cambiar
+				//- 					hr
+				//- 					each subval in val.variants
+				//- 						img.img-prev(src=`http://localhost:3000/base/${val.folder.split('\\')[val.folder.split('\\').length - 1]}/${val.collection}/${val.handle}/${subval.filename}`, alt="sss")
+				//- 					hr
+				//- 					each subval in val.variants
+				//- 						form.my-2(action="/file/update", method="post")
+				//- 							.input-group.input-group-sm
+				//- 								.input-group-prepend
+				//- 									button.btn.btn-primary( type="submit" id="button-addon1") Update
+				//- 								input.form-control(type='text' aria-label='newhandle' name="newfilename" value=subval.filename)
+				//- 								input.form-control(type='text' aria-label='currenthandle' name="currentfilename" value=subval.filename readonly)
+				//- 								input.form-control.d-none(type='text' aria-label='currenthandle' name="path" value=`${val.folder}\\${val.collection}\\${val.handle}` readonly)
+				//- 						each err in subval.errors
+				//- 							.alert.alert-danger.py-1.m-0(role="alert")
+				//- 								p.p-0.m-0
+				//- 									svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+				//- 										path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+				//- 									small=err.log
 
 					
 		script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')

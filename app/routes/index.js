@@ -1,28 +1,20 @@
 const h = require('../helpers');
+const readfolder = require('../helpers/products/products.js');
 const config = require('../config/index')
 
 
 module.exports = () =>{
   let routes = {
     'get': {
-      '/': async (req, res, next) => {
-        let products = await h.readFolder(config.menDir, config.womanDir, config.poleronDir)
-        let arrRep = [];
-        let ccc = products
-          .map((res) => res.handle)
-          .reduce(
-            (newTempArr, el) =>
-              newTempArr.includes(el)
-                ? (arrRep = [...arrRep, el])
-                : [...newTempArr, el],
-            []
-          );
-
+      '/': (req, res, next) => {
+				const read = readfolder(config.menDir, config.womanDir, config.poleronDir)
+				console.log(read.products[0].cloudstatus)
         res.status(200).render('index', {
-          products,
-          type: 'all',
-          equals: arrRep
-        });
+					products: read.products,
+					duplicates: read.duplicates,
+					collections: read.collections,
+					handles: read.handles
+				});
         res.end()
       },
       '/:type': async(req, res, next) => {
