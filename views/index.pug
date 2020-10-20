@@ -85,16 +85,23 @@ html(lang="en")
 												label.col-form-label.col-form-label-sm(for="handle") Handle
 												input.form-control.form-control-sm(id='handle' name="handle" type="text" value=val.handle)
 										.form-row
-											label.col-form-label.col-form-label-sm(for="handle") Variants
+											label.col-form-label.col-form-label-sm(for="variant") Variants
 											each subval in val.variants
 												.input-group.input-group-sm.mb-3
 													.input-group-prepend
 														span.input-group-text.color=subval.color
-													input.form-control.form-control-sm(id='handle' name=subval.color.split(' ').join('_') type="text" value=subval.variant)
+													input.form-control.form-control-sm(id='variant' name=subval.color.split(' ').join('_') type="text" value=subval.variant)
+													input.form-control.form-control-sm.d-none(id='variant' name=`${subval.color.split(' ').join('_')+'_old'}` type="text" value=subval.variant)
+													each error in subval.errors
+														.alert.alert-danger.py-1.m-0.mt-1(role="alert")
+															p.p-0.m-0
+																svg.mr-2.bi.bi-exclamation-triangle-fill(width='1.0625em' height='1em' viewbox='0 0 17 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg')
+																	path(fill-rule='evenodd' d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z')
+																small=error
 										.form-check
 											input.form-check-input(type="checkbox" id="checkshopify" name="access" checked="true")
 											label.form-check-label(for="checkshopify") actualizar producto tambien shopify
-										button(type="submit" class="btn btn-primary w-100") actualizar
+										button.mt-2(type="submit" class="btn btn-primary w-100") actualizar
 				//- .col-7
 				//- 	.wrapper
 				//- 		#nav-tabContent.tab-content.p-2

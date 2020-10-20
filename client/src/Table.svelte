@@ -2,7 +2,7 @@
 	import { productsconfig } from "../../app/config/tienda.config";
 	import colorfilter from "./libs/ColorFilter";
 	import comparesort from "./libs/CompareSort";
-	import customDescription from "./libs/descriptionHTML";
+	const customDescription = require("./libs/descriptionHTML.js");
 	import skuGenerate from "./libs/skuGenerate";
 
 	export let data, sizes, viewimg, htmlview, urlimages;

@@ -2,3 +2,4 @@ node_modules
 client/node_modules
 debug.log
 .env
+app/config/shopify.config.js

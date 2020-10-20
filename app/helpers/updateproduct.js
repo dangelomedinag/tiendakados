@@ -1,23 +1,22 @@
+const fs = require('fs')
+const {resolve} = require('path')
+const customDescription = require('../../client/src/libs/descriptionHTML')
+const shopifyconfig = require('../config/shopify.config')
+const axios = require('axios')
+
 ///////////////////////////////////////////////////////////////////////////////////////
 /////                                                                             /////
                            /* update title txt file */
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
-import {productsconfig} from '../config/tienda.config.js'
-
-const customDescription = (title, tprod) => {
-  return `<h3 style="font-weight: 600; font-size: 22px;">${title.toUpperCase()}</h3><hr style="border: 1px solid #f2f2f2;">
-<h3 style="font-weight: 400;">${
-    tprod === productsconfig.polerones.name ? "Un polerón" : "Una polera"
-  } de algodón con diseño de ${title}</h3><p>${
-    tprod === productsconfig.polerones.name ? "Polerón unisex" : "Polera"
-  } de material fresco 100% algodon, agrega un poco de actitud a tu vida diaria con esta polera. El tejido de algodón te ofrece una sensación de total comodidad.</p>`;
-}
 
 
-const updateProduct = (obj_product) => {
-  let product = {
+const updateProduct = async(obj_product) => {
+	let product = obj_product
+
+	/* obj_product
+	{
     type: "Poleras hombre",
     fullpath: "C:\\Users\\DiseñoPC\\Desktop\\kados-notocar\\colecciones-poleras-hombre\\animales\\gato_cayendo",
     product_id: "5720384962725",
@@ -36,7 +35,7 @@ const updateProduct = (obj_product) => {
     verde_oscuro: "Polera_verde_oscuro_gatogarra.png",
     vinotinto: "Polera_vinotinto_gatogarra.png",
     access: "on"
-  }
+  } */
 
   let type = product.type
   let fullpath = product.fullpath
@@ -49,87 +48,75 @@ const updateProduct = (obj_product) => {
   let access = product.access ? true : false
   let variants =[]
 
-  if(product.blanco) {
-    variants.push(product.blanco)
+  if(product.blanco && product.blanco_old) {
+		variants.push({a: product.blanco, b: product.blanco_old})
   }
-  if(product.negro) {
-    variants.push(product.blanco)
+  if(product.negro && product.negro_old) {
+    variants.push({a: product.negro, b: product.negro_old})
   }
-  if(product.gris) {
-    variants.push(product.blanco)
+  if(product.gris && product.gris_old) {
+    variants.push({a: product.gris, b: product.gris_old})
   }
-  if(product.azul) {
-    variants.push(product.blanco)
+  if(product.azul && product.azul_old) {
+    variants.push({a: product.azul, b: product.azul_old})
   }
-  if(product.azul_opaco) {
-    variants.push(product.blanco)
+  if(product.azul_opaco && product.azul_opaco_old) {
+    variants.push({a: product.azul_opaco, b: product.azul_opaco_old})
   }
-  if(product.azul_marino) {
-    variants.push(product.blanco)
+  if(product.azul_marino && product.azul_marino_old) {
+    variants.push({a: product.azul_marino, b: product.azul_marino_old})
   }
-  if(product.rojo) {
-    variants.push(product.blanco)
+  if(product.rojo && product.rojo_old) {
+    variants.push({a: product.rojo, b:product.rojo_old})
   }
-  if(product.gris_oscuro) {
-    variants.push(product.blanco)
+  if(product.gris_oscuro && product.gris_oscuro_old) {
+    variants.push({a: product.gris_oscuro, b: product.gris_oscuro_old})
   }
-  if(product.verde_agua) {
-    variants.push(product.blanco)
+  if(product.verde_agua && product.verde_agua_old) {
+    variants.push({a: product.verde_agua, b:product.verde_agua_old})
   }
-  if(product.verde_oscuro) {
-    variants.push(product.blanco)
+  if(product.verde_oscuro && product.verde_oscuro_old) {
+    variants.push({a: product.verde_oscuro, b: product.verde_oscuro_old})
   }
-  if(product.vinotinto) {
-    variants.push(product.blanco)
-  }
-
-  console.log(old_title,title,product_title)
-  console.log('--------------------')
-  // console.log(customDescription(title, type))
-
-  // if (old_title !== title){
-
-  //   try {
-  //     fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), title.toString())
-  //     if (access && title !== product_title) {
-  //       try {
-  //         const update = await axios.put(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/products/${product_id}.json`, {
-  //           product: {
-  //             id: product_id,
-  //             title: newtitle,
-  //             body_html: newhtml
-  //           }
-  //         })
-  //       } catch (error) {
-  //         console.log(error)
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  if(product.vinotinto && product.vinotinto_old) {
+    variants.push({a: product.vinotinto, b: product.vinotinto_old})
+	}
+	
+	variants.forEach(item=> {
+		if(item.a !== item.b){
+			try {
+				fs.renameSync(resolve(fullpath, item.b), resolve(fullpath, item.a))
+				console.log('old: ',item.b,' | ', 'rename: ', item.a)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+	})
 
 
-  
+  if (old_title !== title){
+    try {
+			fs.writeFileSync(resolve(fullpath, "__title__.txt"), title.toString())
 
+      if (access && title !== product_title) {
+        try {
+          const update = await axios.put(`https://${shopifyconfig.API_key}:${shopifyconfig.password}@${shopifyconfig.store_admin}/api/2020-10/products/${product_id}.json`, {
+            product: {
+              id: product_id,
+              title,
+              body_html: customDescription(title, type)
+            }
+          })
+        } catch (error) {
+          console.log(error)
+				}
+				
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-	// try {
-	// 	fs.writeFileSync(path.resolve(fullpath, "__title__.txt"), newtitle.toString())
-	// 	try {
-	// 		const update = await axios.put(`https://722f149a23db579ae9f14307c9344fe3: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@storetets.myshopify.com/admin/api/2020-10/products/${product_id}.json`, {
-	// 			product: {
-	// 				id: product_id,
-	// 				title: newtitle
-	// 			}
-	// 		})
-	// 		let res =  await update.data
-	// 		console.log(res)
-	// 	} catch (error) {
-	// 		console.log('AQUIIIIIIIII: ',error)
-	// 	}
-	// } catch (error) {
-	// 	console.log(error)
-	// }
 }
 
 module.exports = updateProduct;

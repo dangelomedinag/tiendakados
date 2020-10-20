@@ -130,10 +130,10 @@ module.exports = () =>{
         res.redirect('/')
        
       },
-      '/update/product': (req, res, next) => {
-        updateProduct(req.body)
+      '/update/product': async(req, res, next) => {
+        await updateProduct(req.body)
 				// console.log(req.body)
-        res.send(req.body)
+        res.redirect('/')
       }
     },
     'NA': (req, res, next) => {
