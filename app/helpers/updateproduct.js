@@ -6,7 +6,7 @@ const axios = require('axios')
 
 ///////////////////////////////////////////////////////////////////////////////////////
 /////                                                                             /////
-                           /* update title txt file */
+                            /* update title txt file */
 /////                                                                             /////
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,11 +40,9 @@ const updateProduct = async(obj_product) => {
   let type = product.type
   let fullpath = product.fullpath
   let product_id = product.product_id
-  let product_html = product.product_html
   let product_title = product.product_title
   let title = product.title
   let old_title = product.old_title
-  let html = product.product_html
   let access = product.access ? true : false
   let variants =[]
 
@@ -107,6 +105,16 @@ const updateProduct = async(obj_product) => {
               body_html: customDescription(title, type)
             }
           })
+
+          if(update.status == 200){
+            try {
+              fs.writeFileSync(resolve(fullpath, "__shopify__.json"), JSON.stringify(update.data.product))
+              console.log('update file ___shopify__.json in: ', product);
+            } catch (error) {
+              console.log('error: ', error, product)
+            }
+          }
+          // console.log(update.status, update.data)
         } catch (error) {
           console.log(error)
 				}

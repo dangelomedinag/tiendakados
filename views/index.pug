@@ -28,6 +28,14 @@ html(lang="en")
 				.col-5.p-0
 					.wrapper.p-2
 						div
+							p.lead.text-center=`Products errors ( ${products.filter(item => item.errors.length > 0).length} )`
+							#list-tab-error.list-group.mb-3(role='tablist')
+								each val, index in products.filter(item => item.errors.length > 0).length > 0 ? products.filter(item => item.errors.length > 0) : []
+									a(class=`list-group-item list-group-item-action p-2 list-folder-item` data-toggle='list' href=`#item-${val.uuid}` role='tab' aria-controls='home')=`${val.collection} / ${val.handle}`
+										div.d-inline-block.ml-1
+											ul.list-group.list-group-horizontal.m-0.p-0.text-white
+												li.list-group-item.bg-danger.m-0.p-0.small=`[ handle ] ${index +1}`
+						div
 							p.lead.text-center=`Handles duplicados ( ${duplicates.length} )`
 							#list-tab-duplicates.list-group.mb-3(role='tablist')
 								each val, index in duplicates
@@ -43,9 +51,11 @@ html(lang="en")
 										div.d-inline-block.ml-1
 											ul.list-group.list-group-horizontal.m-0.p-0.text-white
 												if val.errors.length > 0
-													li.list-group-item.bg-danger.m-0.p-0.small errors
+													li.list-group-item.bg-danger.m-0.p-0.small=`[ handle ]`
 												if val.cloudstatus.file
-													li.list-group-item.bg-success.m-0.p-0.small in shopify
+													li.list-group-item.bg-success.m-0.p-0.small=`[ in shopify ]`
+												if val.variants.filter(item => item.errors.length > 0).length > 0
+													li.list-group-item.bg-warning.m-0.p-0.small=`[ files ]`
 							
 				.col-7
 					.wrapper
@@ -60,6 +70,7 @@ html(lang="en")
 												a.btn.btn-info.btn-sm(href="#") refresh
 											hr
 											p.mb-0.small=`product_id = ${val.cloudstatus.data.id} | created_at = ${val.cloudstatus.data.created_at} | handle = ${val.cloudstatus.data.handle}`
+											p.mb-0.small=`product_id = ${val.cloudstatus.data.title}`
 											each variant in val.cloudstatus.data.variants.filter(item=> item.option1 === 'S')
 												p.mb-0.small=`variant = ${variant.option2}`
 											div
@@ -83,7 +94,7 @@ html(lang="en")
 												input.form-control.form-control-sm(id='title' name="title" type="text" value=val.title)
 											.col.form-group
 												label.col-form-label.col-form-label-sm(for="handle") Handle
-												input.form-control.form-control-sm(id='handle' name="handle" type="text" value=val.handle)
+												input.form-control.form-control-sm(id='handle' name="handle" type="text" value=val.handle readonly)
 										.form-row
 											label.col-form-label.col-form-label-sm(for="variant") Variants
 											each subval in val.variants

@@ -1,10 +1,10 @@
 const {Router} = require('express');
-const config = require('../config/index')
-const shopifyconfig = require('../config/shopify.config')
-const {errLogs, detectColor, detectType, detectPrice, renameFileTofolder, errLogsProducts} = require('./errorslog')
-const path = require('path')
+const config = require('../config/index');
+const shopifyconfig = require('../config/shopify.config');
+const {errLogs, detectColor, detectType, detectPrice, renameFileTofolder, errLogsProducts} = require('./errorslog');
+const path = require('path');
 const axios = require('axios').default;
-const fs = require('fs')
+const fs = require('fs');
 const router = Router()
 const { v4: uuidv4 } = require("uuid");
 
